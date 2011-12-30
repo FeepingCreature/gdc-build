@@ -1,0 +1,13 @@
+#!/bin/sh
+export FILE=$1; shift
+export BASE_PARAMS=-J.
+touch exclude.list
+export PARAMS=$(echo $BASE_PARAMS; gdc $BASE_PARAMS $FILE $@ -c -fd-verbose -S -o /dev/null |grep '^import ' \
+        |sed -e "s/import *//" -e "s/\t.*//" |grep -v "^std." |grep -v "^etc."\
+        |grep -v "^gcc\." |grep -v "^gcstats$" |grep -v "^object$" |grep -v "^crc32" \
+        |sed -e "s/\./\//g" -e "s/$/\.d/" \
+        |grep -vf exclude.list)
+if [[ ! -s exclude.list ]]; then rm exclude.list; fi
+echo gdc $FILE $PARAMS $@
+gdc $FILE $PARAMS $@
+# xargs gdc $FILE $@ # -v 2>&1 |grep cc1d |sed -e "s/.*cc1d /Building /" -e "s/ -quiet.*//"

@@ -1,0 +1,3 @@
+Usage: gdc-build file.d $FLAGS
+Requires gdc in the path.
+Determines module dependencies and generates a full compile line.
