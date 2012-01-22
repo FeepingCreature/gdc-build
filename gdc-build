@@ -1,4 +1,6 @@
 #!/bin/sh
+export EXEC=$(basename $0)
+export PREFIX=${EXEC/%gdc-build/}
 export FILE=$1; shift
 export BASE_PARAMS=-J.
 touch exclude.list
@@ -8,6 +10,6 @@ export PARAMS=$(echo $BASE_PARAMS; gdc $BASE_PARAMS $FILE $@ -c -fd-verbose -S -
         |sed -e "s/\./\//g" -e "s/$/\.d/" \
         |grep -vf exclude.list)
 if [[ ! -s exclude.list ]]; then rm exclude.list; fi
-echo gdc $FILE $PARAMS $@
-gdc $FILE $PARAMS $@
+echo ${PREFIX}gdc $FILE $PARAMS $@
+${PREFIX}gdc $FILE $PARAMS $@
 # xargs gdc $FILE $@ # -v 2>&1 |grep cc1d |sed -e "s/.*cc1d /Building /" -e "s/ -quiet.*//"
